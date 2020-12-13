@@ -12,7 +12,8 @@ git clone or download this repo and run it with
 
     python3 flappy-bird-pygame.py
 
-This should launch the game.
+This should launch the game.  
+
 ![Game Screenshot](https://raw.githubusercontent.com/KailashGanesh/Flappybird-pygame/main/Screenshot.jpg)
 ## Resources
 - [Assets](https://github.com/samuelcust/flappy-bird-assets)
