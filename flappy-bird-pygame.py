@@ -27,8 +27,10 @@ def draw_pipes(pipes):
 def check_collision(pipes):
     for pipe in pipes:
         if bird_rect.colliderect(pipe): # checks if bird hits pipes
+            death_sound.play()
             return False
     if bird_rect.top <= -100 or bird_rect.bottom >= 900: # checks if bird is too high or low
+        death_sound.play()
         return False
     return True
 
@@ -60,6 +62,7 @@ def update_score(score, high_score):
         high_score = score
     return high_score
 
+pygame.mixer.pre_init(frequency = 44100, size = 16, channels = 1, buffer = 512)
 pygame.init()
 
 # Game Varibles
@@ -113,7 +116,10 @@ game_over_surface = pygame.transform.scale2x(pygame.image.load('assets/sprites/m
 game_over_rect = game_over_surface.get_rect(center = (284,490))
 
 # load sounds
-flap_sound = pygame.mixer.Sound('assets/
+flap_sound = pygame.mixer.Sound('assets/audio/sfx_wing.wav') 
+death_sound = pygame.mixer.Sound('assets/audio/sfx_hit.wav')
+score_sound = pygame.mixer.Sound('assets/audio/sfx_point.wav')
+score_sound_countdown = 100
 
 # main game loop
 while True:
@@ -125,6 +131,7 @@ while True:
             if event.key == pygame.K_SPACE and game_active: # Space = Jump
                 bird_movement = 0 # remove gravity so that the -12 can lead to a jump
                 bird_movement -= 12
+                flap_sound.play()
             if event.key == pygame.K_SPACE and game_active == False:
                 game_active = True
                 pipe_list.clear()
@@ -160,6 +167,11 @@ while True:
         # score logic
         score += 0.01
         score_display('main_game')
+        # score sound logic
+        score_sound_countdown -= 1
+        if score_sound_countdown <= 0:
+            score_sound.play()
+            score_sound_countdown = 100
     else:
         screen.blit(game_over_surface,game_over_rect) 
         high_score = update_score(score, high_score)
