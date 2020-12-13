@@ -41,6 +41,25 @@ def bird_animation():
     new_bird_rect = new_bird.get_rect(center = (100,bird_rect.centery))
     return new_bird,new_bird_rect
 
+def score_display(game_state):
+    if game_state == 'main_game':
+        score_surface = game_font.render(str(int(score)), True, (255,255,255))
+        score_rect = score_surface.get_rect(center = (288,100))
+        screen.blit(score_surface, score_rect)
+    if game_state == 'game_over':
+        score_surface = game_font.render(f'Score: {int(score)}', True, (255,255,255))
+        score_rect = score_surface.get_rect(center = (288,100))
+        screen.blit(score_surface, score_rect)
+
+        high_score_surface = game_font.render(f'High score: {int(high_score)}', True, (255,255,255))
+        high_score_rect = score_surface.get_rect(center = (250,780))
+        screen.blit(high_score_surface, high_score_rect)
+
+def update_score(score, high_score):
+    if score > high_score:
+        high_score = score
+    return high_score
+
 pygame.init()
 
 # Game Varibles
@@ -49,10 +68,13 @@ display_size = (567,1008)
 gravity = 0.25 
 bird_movement = 0
 game_active = True
+score = 0
+high_score = 0
 
 # start screen and clock
 screen = pygame.display.set_mode(display_size)
 clock = pygame.time.Clock()
+game_font = pygame.font.Font('assets/04B_19.ttf',40)
 
 # load background image 
 bg_surface = pygame.image.load('assets/sprites/background-day.png').convert()
@@ -86,6 +108,14 @@ SPAWNPIPE = pygame.USEREVENT
 pygame.time.set_timer(SPAWNPIPE, 1200) # trigger SPAWNPIPE every 1.2 secounds
 pipe_height = [400,600,700]
 
+# load game over screen
+game_over_surface = pygame.transform.scale2x(pygame.image.load('assets/sprites/message.png').convert_alpha())
+game_over_rect = game_over_surface.get_rect(center = (284,490))
+
+# load sounds
+flap_sound = pygame.mixer.Sound('assets/
+
+# main game loop
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -100,6 +130,7 @@ while True:
                 pipe_list.clear()
                 bird_rect.center = (100,504)
                 bird_movement = 0
+                score = 0
 
         if event.type == SPAWNPIPE: # to spawn pipes
             pipe_list.extend(create_pipe())
@@ -125,6 +156,14 @@ while True:
         # pipes logic
         pipe_list = move_pipe(pipe_list)
         draw_pipes(pipe_list)
+
+        # score logic
+        score += 0.01
+        score_display('main_game')
+    else:
+        screen.blit(game_over_surface,game_over_rect) 
+        high_score = update_score(score, high_score)
+        score_display('game_over')
 
     # floor logic - make the floor seem moving by adding a image of the floor to the right as the floor moves to the left
     floor_x_pos -= 1
