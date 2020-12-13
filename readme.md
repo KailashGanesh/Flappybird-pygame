@@ -1,6 +1,6 @@
 # Flappy Bird in Pygame
 ## Install Instructions
-    python3 pip install pygame
+    python3 -m pip install pygame
 
 check if pygame installed right: 
 
