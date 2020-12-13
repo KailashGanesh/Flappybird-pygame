@@ -1,4 +1,5 @@
 # Flappy Bird in Pygame
+![Game Screenshot](https://raw.githubusercontent.com/KailashGanesh/Flappybird-pygame/main/Screenshot.jpg)
 ## Install Instructions
     python3 pip install pygame
 
